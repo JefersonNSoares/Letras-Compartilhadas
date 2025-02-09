@@ -2,6 +2,8 @@
   "expo": {
     "name": "letrascompartilhadas",
     "slug": "letrascompartilhadas",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "scheme": "letrascompartilhadas",
+    "plugins": ["expo-router"]
   }
 }

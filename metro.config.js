@@ -1,7 +1,20 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
-const { getDefaultConfig } = require('expo/metro-config');
+const { getDefaultConfig } = require("expo/metro-config")
 
 /** @type {import('expo/metro-config').MetroConfig} */
-const config = getDefaultConfig(__dirname);
+module.exports = (() => {
+  const defaultConfig = getDefaultConfig(__dirname)
 
-module.exports = config;
+  return {
+    ...defaultConfig,
+    resolver: {
+      ...defaultConfig.resolver,
+      alias: {
+        "@assets": "./src/app/assets",
+        "@components": "./src/app/components",
+        "@pages": "./src/app/pages",
+        "@routes": "./src/app/routes",
+      },
+    },
+  }
+})()

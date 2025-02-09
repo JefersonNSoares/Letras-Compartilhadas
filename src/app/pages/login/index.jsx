@@ -15,7 +15,7 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/icone-books.png")}
+        source={require("@assets/icone-books.png")}
         style={{ width: 200, height: 200 }}
       />
       <Text style={styles.textTitle}>LETRAS</Text>
