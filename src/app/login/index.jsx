@@ -1,3 +1,4 @@
+import { Link } from "expo-router"
 import React, { useState } from "react"
 import {
   StyleSheet,
@@ -41,9 +42,9 @@ export default function Login() {
         />
 
         <View style={styles.viewEsqueciSenha}>
-          <TouchableOpacity onPress={() => console.log("Esqueceu a senha?")}>
+          <Link href={"/resetPassword"}>
             <Text style={styles.buttonTextEsqueciSenha}>Esqueceu a senha?</Text>
-          </TouchableOpacity>
+          </Link>
         </View>
 
         <TouchableOpacity

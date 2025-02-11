@@ -10,10 +10,9 @@ module.exports = (() => {
     resolver: {
       ...defaultConfig.resolver,
       alias: {
-        "@assets": "./src/app/assets",
-        "@components": "./src/app/components",
+        "@assets": "./src/assets",
+        "@components": "./src/components",
         "@pages": "./src/app/pages",
-        "@routes": "./src/app/routes",
       },
     },
   }

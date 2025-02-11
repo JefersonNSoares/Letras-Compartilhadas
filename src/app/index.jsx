@@ -1,22 +1,8 @@
-import { Link } from "expo-router"
 import React from "react"
-import { StyleSheet, Text } from "react-native"
+import { Redirect } from "expo-router"
 
 export default function App() {
-  return (
-    <>
-      <Text>Olá, mundo!</Text>
-      <Link href={"/pages/login"}>Login</Link>
-      <Link href={"/pages/resetPassword"}>resetPassword</Link>
-    </>
-  )
-}
+  const autentificado = true
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-})
+  return <Redirect href="/home" />
+}
