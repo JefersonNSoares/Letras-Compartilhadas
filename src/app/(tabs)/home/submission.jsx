@@ -1,7 +1,91 @@
-import React from "react"
+import React, { useState, useRef } from "react"
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native"
+import { CameraView, CameraType, useCameraPermissions } from "expo-camera"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export default function Submission() {
+  const [cameraVisible, setCameraVisible] = useState(false)
+  const [facing, setFacing] = useState("back")
+  const [permission, requestPermission] = useCameraPermissions()
+
+  const cameraRef = useRef(null)
+
+  const handleRequestPermission = async () => {
+    const newPermission = await requestPermission()
+    if (newPermission.granted) {
+      console.log("Permissão concedida!")
+    } else {
+      console.log("Permissão negada!")
+    }
+  }
+
+  const handleTakePicture = async () => {
+    if (cameraRef.current) {
+      const photo = await cameraRef.current.takePictureAsync()
+      await savePhoto(photo.uri)
+      Alert.alert("Foto salva com sucesso!")
+      setCameraVisible(false)
+    }
+  }
+
+  const savePhoto = async (uri) => {
+    try {
+      const storedPhotos = await AsyncStorage.getItem("@photos")
+      const photosArray = storedPhotos ? JSON.parse(storedPhotos) : []
+      photosArray.push(uri)
+      await AsyncStorage.setItem("@photos", JSON.stringify(photosArray))
+    } catch (error) {
+      console.error("Erro ao salvar foto:", error)
+    }
+  }
+
+  if (!permission) {
+    return <View />
+  }
+
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.message}>
+          Precisamos da permissão para acessar a câmera
+        </Text>
+        <TouchableOpacity
+          style={styles.cameraButton}
+          onPress={handleRequestPermission}
+        >
+          <Text style={styles.cameraButtonText}>Conceder Permissão</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  if (cameraVisible) {
+    return (
+      <CameraView style={{ flex: 1 }} facing={facing} ref={cameraRef}>
+        <View style={styles.cameraButtonContainer}>
+          <TouchableOpacity
+            style={styles.cameraButton}
+            onPress={handleTakePicture}
+          >
+            <Text style={styles.cameraButtonText}>Tirar Foto</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.cameraButton}
+            onPress={() => setCameraVisible(false)}
+          >
+            <Text style={styles.cameraButtonText}>Cancelar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.cameraButton}
+            onPress={() => setFacing(facing === "back" ? "front" : "back")}
+          >
+            <Text style={styles.cameraButtonText}>Trocar Câmera</Text>
+          </TouchableOpacity>
+        </View>
+      </CameraView>
+    )
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.containerTitle}>
@@ -24,7 +108,7 @@ export default function Submission() {
       <View style={styles.conteinarSection}>
         <TouchableOpacity
           style={{ alignItems: "center" }}
-          onPress={() => console.log("Fotografe sua redação")}
+          onPress={() => setCameraVisible(true)}
         >
           <Image
             source={require("@assets/camera.png")}
@@ -82,5 +166,26 @@ const styles = StyleSheet.create({
   subText: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  cameraButtonContainer: {
+    position: "absolute",
+    bottom: 20,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+  },
+  cameraButton: {
+    backgroundColor: "#a46cac",
+    padding: 10,
+    borderRadius: 5,
+  },
+  cameraButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  message: {
+    textAlign: "center",
+    fontSize: 16,
+    marginBottom: 10,
   },
 })
