@@ -1,4 +1,4 @@
-import { Link } from "expo-router"
+import { Link, useRouter } from "expo-router"
 import React, { useState } from "react"
 import {
   StyleSheet,
@@ -7,11 +7,32 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native"
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from "../../firebaseConfig" // Importando configuração do Firebase
 
 export default function Login() {
   const [textEmail, setTextEmail] = useState("")
   const [textSenha, setTextSenha] = useState("")
+  const router = useRouter()
+
+  const handleLogin = async () => {
+    console.log("Email:", textEmail)
+    console.log("Senha:", textSenha)
+    if (!textEmail || !textSenha) {
+      Alert.alert("Erro", "Preencha todos os campos!")
+      return
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, textEmail, textSenha)
+      Alert.alert("Sucesso", "Login realizado!")
+      router.push("/home") // Redireciona para a home após login bem-sucedido
+    } catch (error) {
+      Alert.alert("Erro ao entrar", error.message)
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -47,10 +68,7 @@ export default function Login() {
           </Link>
         </View>
 
-        <TouchableOpacity
-          style={styles.buttonLogin}
-          onPress={() => console.log("Entrou")}
-        >
+        <TouchableOpacity style={styles.buttonLogin} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
