@@ -4,6 +4,16 @@
     "slug": "letrascompartilhadas",
     "version": "1.0.0",
     "scheme": "letrascompartilhadas",
-    "plugins": ["expo-router"]
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f44c3373-bad3-409e-9bfb-25f143103afc"
+      }
+    }
   }
 }

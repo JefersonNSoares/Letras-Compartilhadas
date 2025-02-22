@@ -1,14 +1,16 @@
 import React, { useState, useRef } from "react"
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native"
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera"
+import { CameraView, useCameraPermissions } from "expo-camera"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useRouter } from "expo-router"
 
 export default function Submission() {
   const [cameraVisible, setCameraVisible] = useState(false)
   const [facing, setFacing] = useState("back")
-  const [permission, requestPermission] = useCameraPermissions()
-
   const cameraRef = useRef(null)
+  const router = useRouter()
+
+  const [permission, requestPermission] = useCameraPermissions()
 
   const handleRequestPermission = async () => {
     const newPermission = await requestPermission()
@@ -23,8 +25,13 @@ export default function Submission() {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync()
       await savePhoto(photo.uri)
-      Alert.alert("Foto salva com sucesso!")
       setCameraVisible(false)
+
+      // Redirecionar para a tela de visualização da foto
+      router.push({
+        pathname: "/image-preview",
+        params: { photoUri: photo.uri },
+      })
     }
   }
 
@@ -95,7 +102,11 @@ export default function Submission() {
       <View style={styles.conteinarSection}>
         <TouchableOpacity
           style={{ alignItems: "center" }}
-          onPress={() => console.log("Digite sua redação")}
+          onPress={() =>
+            router.push({
+              pathname: "/write-essay",
+            })
+          }
         >
           <Image
             source={require("@assets/teclado.png")}
@@ -114,7 +125,7 @@ export default function Submission() {
             source={require("@assets/camera.png")}
             style={{ width: 90, height: 70 }}
           />
-          <Text style={styles.subText}>Fotagrafe sua Redação</Text>
+          <Text style={styles.subText}>Fotografe sua Redação</Text>
         </TouchableOpacity>
       </View>
 
