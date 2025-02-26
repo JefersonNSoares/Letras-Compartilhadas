@@ -16,7 +16,10 @@ export default function RedacaoScreen() {
       const listaSalva = await AsyncStorage.getItem("redacoes")
       const redacoesArray = listaSalva ? JSON.parse(listaSalva) : []
 
-      const novaRedacao = { id: Date.now(), texto: redacao }
+      let generateUniqueId =
+        Date.now().toString() + "-" + Math.random().toString(36).slice(2, 9)
+
+      const novaRedacao = { id: generateUniqueId, texto: redacao }
       redacoesArray.push(novaRedacao)
 
       await AsyncStorage.setItem("redacoes", JSON.stringify(redacoesArray))

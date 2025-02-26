@@ -22,6 +22,7 @@ export default function Layout() {
         name="statistics-writing"
         options={{ title: "Correção da Redação", headerShown: true }}
       />
+      <Stack.Screen name="edit-writing" options={{ title: "Editar Redação" }} />
     </Stack>
   )
 }

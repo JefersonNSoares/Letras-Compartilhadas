@@ -31,8 +31,12 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Letras Compartilhadas</Text>
-      <Text style={styles.subtitle}>Pratique e compartilhe suas redações!</Text>
+      <View style={styles.ConteinerDescricao}>
+        <Text style={styles.subtitle}>
+          Seja bem-vindo(a) ao Letras Compartilhadas, onde juntos transformamos
+          dúvidas em conhecimento e redações em conquistas!
+        </Text>
+      </View>
 
       <TouchableOpacity
         style={styles.button}
@@ -82,6 +86,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#e4e4e4",
     alignItems: "center",
   },
+  ConteinerDescricao: {
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#c2c2c2",
+    borderRadius: 10,
+    marginBottom: 20,
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
@@ -89,9 +100,10 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: "#555",
+    color: "#fffff",
     marginBottom: 20,
     textAlign: "center",
+    fontWeight: "bold",
   },
   button: {
     backgroundColor: "#6c63ff",

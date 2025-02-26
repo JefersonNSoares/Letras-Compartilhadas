@@ -1,5 +1,5 @@
 import { Link, useRouter } from "expo-router"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   StyleSheet,
   Text,
@@ -8,30 +8,61 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native"
-import { signInWithEmailAndPassword } from "firebase/auth"
-import { auth } from "../../firebaseConfig" // Importando configuração do Firebase
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
+import { auth } from "../../firebaseConfig"
 
 export default function Login() {
   const [textEmail, setTextEmail] = useState("")
   const [textSenha, setTextSenha] = useState("")
+  const [loading, setLoading] = useState(true) // Estado para verificar carregamento
   const router = useRouter()
 
+  // Verifica se o usuário já está logado ao abrir a tela
+  useEffect(() => {
+    const checkUserSession = async () => {
+      const user = await AsyncStorage.getItem("user")
+      if (user) {
+        router.push("/home") // Se o usuário já está salvo, vai direto para a home
+      }
+      setLoading(false) // Para de carregar
+    }
+
+    checkUserSession()
+  }, [])
+
   const handleLogin = async () => {
-    console.log("Email:", textEmail)
-    console.log("Senha:", textSenha)
     if (!textEmail || !textSenha) {
       Alert.alert("Erro", "Preencha todos os campos!")
       return
     }
 
     try {
-      await signInWithEmailAndPassword(auth, textEmail, textSenha)
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        textEmail,
+        textSenha
+      )
+      const user = userCredential.user
+
+      // Salva os dados do usuário localmente
+      await AsyncStorage.setItem("user", JSON.stringify(user))
+
       Alert.alert("Sucesso", "Login realizado!")
       router.push("/home") // Redireciona para a home após login bem-sucedido
     } catch (error) {
       Alert.alert("Erro ao entrar", error.message)
     }
+  }
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#a46cac" />
+      </View>
+    )
   }
 
   return (
@@ -56,10 +87,7 @@ export default function Login() {
           onChangeText={setTextSenha}
           value={textSenha}
           placeholder="Digite a senha"
-          secureTextEntry={true} // Oculta o texto digitado (transforma em pontos ou asteriscos)
-          keyboardType="default" // Usa o teclado padrão (não email ou numérico)
-          autoCapitalize="none" // Não deixa a primeira letra maiúscula
-          autoCorrect={false} // Evita autocorreção, útil para senhas
+          secureTextEntry
         />
 
         <View style={styles.viewEsqueciSenha}>
@@ -73,8 +101,8 @@ export default function Login() {
         </TouchableOpacity>
 
         <View style={styles.viewCriarConta}>
-          <Text style={styles.textNaoConta}>Não tem uma conta ?</Text>
-          <TouchableOpacity onPress={() => console.log("Cadastrar")}>
+          <Text style={styles.textNaoConta}>Não tem uma conta?</Text>
+          <TouchableOpacity onPress={() => router.push("/register")}>
             <Text style={styles.buttonTextEsqueciSenha}>Criar uma conta</Text>
           </TouchableOpacity>
         </View>

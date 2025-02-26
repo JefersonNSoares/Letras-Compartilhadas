@@ -6,7 +6,7 @@ export default function HomeScreen() {
   const autentificado = true
 
   useEffect(() => {
-    console.log("Firebase inicializado:", app)
+    // console.log("Firebase inicializado:", app)
   }, [])
 
   return <Redirect href="/login" />

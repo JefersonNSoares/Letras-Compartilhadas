@@ -1,68 +1,82 @@
-import React, { useState } from "react"
+// statistics-writing.js
+import React, { useState, useEffect } from "react"
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native"
 import { useLocalSearchParams } from "expo-router"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { MaterialIcons } from "@expo/vector-icons"
 
 // Função para definir a cor e o ícone com base na nota
 const getNotaInfo = (nota) => {
-  if (nota < 400) return { color: "#ff4d4d", icon: "error" } // Vermelho - Erro
-  if (nota >= 400 && nota < 700) return { color: "#ffcc00", icon: "warning" } // Amarelo - Aviso
+  if (nota < 400) return { color: "#ff4d4d", icon: "error" }
+  if (nota >= 400 && nota < 700) return { color: "#ffcc00", icon: "warning" }
   if (nota >= 700 && nota < 900)
-    return { color: "#66cc66", icon: "check-circle" } // Verde - Correto
-  return { color: "#d4af37", icon: "emoji-events" } // Dourado - Troféu
+    return { color: "#66cc66", icon: "check-circle" }
+  return { color: "#d4af37", icon: "emoji-events" }
+}
+
+const getNotaInfoCompetencias = (nota) => {
+  if (nota < 75) return { color: "#ff4d4d", icon: "error" }
+  if (nota >= 76 && nota < 150) return { color: "#ffcc00", icon: "warning" }
+  if (nota >= 150 && nota < 190)
+    return { color: "#66cc66", icon: "check-circle" }
+  return { color: "#d4af37", icon: "emoji-events" }
 }
 
 const EstatisticasRedacao = () => {
+  // Recebendo o id passado na navegação
   const { id } = useLocalSearchParams()
+  const [redacao, setRedacao] = useState("")
+  const [competencias, setCompetencias] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [expanded, setExpanded] = useState([])
 
-  const redacao = "Esta é a redação exemplo..." // Texto fixo para exemplo
-  const competencias = [
-    {
-      titulo: "Competência 1",
-      nota: 850,
-      descricao: "Muito bom, mas pode melhorar...",
-    },
-    {
-      titulo: "Competência 2",
-      nota: 600,
-      descricao: "Médio, trabalhe mais em coesão...",
-    },
-    {
-      titulo: "Competência 3",
-      nota: 920,
-      descricao: "Excelente desenvolvimento...",
-    },
-    {
-      titulo: "Competência 4",
-      nota: 500,
-      descricao: "Razoável, precisa melhorar...",
-    },
-    {
-      titulo: "Competência 5",
-      nota: 300,
-      descricao: "Fraco, precisa revisar estrutura...",
-    },
-  ]
+  useEffect(() => {
+    const loadRedacao = async () => {
+      try {
+        const redacoesData = await AsyncStorage.getItem("redacoes")
+        if (redacoesData) {
+          const redacoes = JSON.parse(redacoesData)
+          // Busca a redação cujo id corresponde ao parâmetro recebido
+          const currentRedacao = redacoes.find(
+            (item) => item.id.toString() === id.toString()
+          )
+          if (!currentRedacao) {
+            setError("Redação não encontrada.")
+            setLoading(false)
+            return
+          }
+          setRedacao(currentRedacao.texto)
+          setCompetencias(currentRedacao.correction)
+        }
+        setLoading(false)
+      } catch (err) {
+        setError("Erro ao carregar a redação.")
+        setLoading(false)
+      }
+    }
 
-  // Alternar a visibilidade de um accordion específico
-  const toggleAccordion = (index) => {
-    setExpanded((prevExpanded) => {
-      if (prevExpanded.includes(index)) {
-        return prevExpanded.filter((i) => i !== index)
+    loadRedacao()
+  }, [id])
+
+  const toggleAccordion = (accordionIndex) => {
+    setExpanded((prev) => {
+      if (prev.includes(accordionIndex)) {
+        return prev.filter((item) => item !== accordionIndex)
       } else {
-        return [...prevExpanded, index]
+        return [...prev, accordionIndex]
       }
     })
   }
 
-  // Componente Accordion manual
+  // Componente Accordion para exibição das seções
   const Accordion = ({ title, content, isOpen, onPress, bgColor, icon }) => (
     <View style={[styles.accordionContainer, { borderColor: bgColor }]}>
       <TouchableOpacity
@@ -80,9 +94,35 @@ const EstatisticasRedacao = () => {
     </View>
   )
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    )
+  }
+
+  if (error) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text>{error}</Text>
+      </View>
+    )
+  }
+
+  if (!competencias) {
+    return (
+      <ScrollView style={styles.container}>
+        <Text style={styles.noCorrectionText}>
+          Nenhuma correção encontrada para essa redação.
+        </Text>
+      </ScrollView>
+    )
+  }
+
   return (
     <ScrollView style={styles.container}>
-      {/* Redação Completa */}
+      {/* Accordion para a redação completa */}
       <Accordion
         title="Redação"
         content={redacao}
@@ -91,17 +131,23 @@ const EstatisticasRedacao = () => {
         bgColor="#ccc"
         icon="description"
       />
-
-      {/* Competências */}
-      {competencias.map((comp, index) => {
-        const { color, icon } = getNotaInfo(comp.nota)
+      {/* Accordion para cada competência */}
+      {competencias.map((comp, i) => {
+        const { color, icon } =
+          comp.titulo === "Melhoria Geral"
+            ? getNotaInfo(comp.nota)
+            : getNotaInfoCompetencias(comp.nota)
         return (
           <Accordion
-            key={index}
+            key={i}
             title={`${comp.titulo}: ${comp.nota}`}
-            content={comp.descricao}
-            isOpen={expanded.includes(index + 1)}
-            onPress={() => toggleAccordion(index + 1)}
+            content={
+              comp.titulo === "Melhoria Geral"
+                ? `Descrição: ${comp.descricao}`
+                : `Descrição: ${comp.descricao}\nSugestão de melhoria: ${comp.sugestao_de_melhoria}`
+            }
+            isOpen={expanded.includes(i + 1)}
+            onPress={() => toggleAccordion(i + 1)}
             bgColor={color}
             icon={icon}
           />
@@ -116,6 +162,22 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#fff",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noCorrectionText: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 20,
+    color: "#888",
   },
   accordionContainer: {
     marginBottom: 10,

@@ -15,7 +15,7 @@ export default function Layout() {
       <Tabs.Screen
         name="homeScreen"
         options={{
-          title: "Home",
+          title: "Pagina Inicial",
           tabBarIcon: ({ size, focused }) => (
             <FontAwesome
               name="home"
