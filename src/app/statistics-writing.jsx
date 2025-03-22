@@ -11,6 +11,8 @@ import {
 import { useLocalSearchParams } from "expo-router"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { MaterialIcons } from "@expo/vector-icons"
+import ajustarNotaCompetencia from "services/ajustarNotaCompetencia"
+import ajustarNotaGeral from "services/ajustarNotasGeral"
 
 // Função para definir a cor e o ícone com base na nota
 const getNotaInfo = (nota) => {
@@ -135,12 +137,16 @@ const EstatisticasRedacao = () => {
       {competencias.map((comp, i) => {
         const { color, icon } =
           comp.titulo === "Melhoria Geral"
-            ? getNotaInfo(comp.nota)
-            : getNotaInfoCompetencias(comp.nota)
+            ? getNotaInfo(ajustarNotaGeral(comp.nota))
+            : getNotaInfoCompetencias(ajustarNotaCompetencia(comp.nota))
         return (
           <Accordion
             key={i}
-            title={`${comp.titulo}: ${comp.nota}`}
+            title={
+              comp.titulo === "Melhoria Geral"
+                ? `${comp.titulo}: ${ajustarNotaGeral(comp.nota)}`
+                : `${comp.titulo}: ${ajustarNotaCompetencia(comp.nota)}`
+            }
             content={
               comp.titulo === "Melhoria Geral"
                 ? `Descrição: ${comp.descricao}`

@@ -116,7 +116,7 @@ export default function Submission() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.conteinarSection}>
+      {/* <View style={styles.conteinarSection}>
         <TouchableOpacity
           style={{ alignItems: "center" }}
           onPress={() => setCameraVisible(true)}
@@ -127,9 +127,9 @@ export default function Submission() {
           />
           <Text style={styles.subText}>Fotografe sua Redação</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
-      <View style={styles.conteinarSection}>
+      {/* <View style={styles.conteinarSection}>
         <TouchableOpacity
           style={{ alignItems: "center" }}
           onPress={() => console.log("Pdf da sua redação")}
@@ -140,7 +140,7 @@ export default function Submission() {
           />
           <Text style={styles.subText}>PDF da sua Redação</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   )
 }

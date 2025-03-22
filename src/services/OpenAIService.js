@@ -2,7 +2,7 @@
 import axios from "axios"
 
 // Idealmente, armazene a chave de API em uma variável de ambiente
-const API_KEY = ""
+const API_KEY = process.env.EXPO_PUBLIC_OPENAI_API_KEY
 
 const openAI = axios.create({
   baseURL: "https://api.openai.com/v1",
@@ -48,7 +48,7 @@ ${redacao}
    - **Sugestão de Melhoria:** Indique como a proposta pode ser aprimorada em termos de criatividade e exequibilidade. Indique como a proposta pode ser mais concreta, específica e inovadora.
 
 6. **Sugestões Gerais de Melhoria:**
-  - **Nota:** Soma total de todas as competencias. 
+  - **Nota:**  Soma total das notas de todas as competencias.   
   - **Descrição:** Após a avaliação das competências, forneça um resumo com sugestões gerais para melhorar a redação como um todo.
 
 ### Formato de Resposta:
@@ -87,7 +87,7 @@ Retorne a avaliação no seguinte formato JSON, onde cada objeto representa uma 
   },
   {
     "titulo": "Melhoria Geral",
-    "nota": 0,
+    "nota": ...,
     "descricao": "...",
   }
 ]

@@ -12,6 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useRouter } from "expo-router"
 import { useFocusEffect } from "@react-navigation/native" // Importa o hook
 import { generateEvaluation } from "../../../services/OpenAIService"
+import CorrectionLoading from "components/CorrectionLoading"
 
 export default function Home() {
   const [redacoes, setRedacoes] = useState([])
@@ -106,7 +107,7 @@ export default function Home() {
       const novaLista = [...redacoes]
       novaLista[index] = { ...novaLista[index], correction: competencias }
       await salvarRedacoes(novaLista)
-      Alert.alert("Sucesso", "Redação enviada para correção e atualizada!")
+      Alert.alert("Sucesso", "Redação corrigida e atualizada!")
     } catch (error) {
       console.error("Erro ao gerar avaliação:", error)
       Alert.alert("Erro", "Não foi possível gerar a avaliação.")
@@ -157,15 +158,20 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
-      {redacoes.length === 0 ? (
-        <Text style={styles.emptyText}>Nenhuma redação salva</Text>
+      {loading ? (
+        <CorrectionLoading />
       ) : (
-        <FlatList
-          data={redacoes}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={renderItem}
-        />
+        <View style={styles.listContainer}>
+          {redacoes.length === 0 ? (
+            <Text style={styles.emptyText}>Nenhuma redação salva</Text>
+          ) : (
+            <FlatList
+              data={redacoes}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={renderItem}
+            />
+          )}
+        </View>
       )}
     </View>
   )
@@ -176,6 +182,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#ececec",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+  },
+  listContainer: {
+    flex: 1,
+    marginTop: 20,
   },
   item: {
     padding: 15,

@@ -8,7 +8,7 @@ import {
   Alert,
 } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useRouter } from "expo-router"
+import { useRouter, Link } from "expo-router"
 
 export default function HomeScreen() {
   const [redacoes, setRedacoes] = useState([])
@@ -47,12 +47,12 @@ export default function HomeScreen() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.push("/redacoes")}
+        onPress={() => router.push("/(tabs)/home/redacoes")}
       >
         <Text style={styles.buttonText}>📜 Minhas Redações</Text>
       </TouchableOpacity>
 
-      <Text style={styles.sectionTitle}>📌 Últimas Redações</Text>
+      {/* <Text style={styles.sectionTitle}>📌 Últimas Redações</Text>
       {redacoes.length === 0 ? (
         <Text style={styles.emptyText}>Nenhuma redação salva ainda.</Text>
       ) : (
@@ -70,7 +70,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
           )}
         />
-      )}
+      )} */}
 
       <Text style={styles.footerText}>
         Total de redações salvas: {redacoes.length}
