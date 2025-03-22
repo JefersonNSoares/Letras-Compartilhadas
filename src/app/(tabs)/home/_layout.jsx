@@ -6,7 +6,7 @@ export default function Layout() {
     <Tabs
       screenOptions={{
         headerStyle: {
-          backgroundColor: "#a46cac",
+          backgroundColor: "#BC80FA",
         },
         headerTintColor: "#fff",
         headerTitleAlign: "center",
@@ -19,12 +19,12 @@ export default function Layout() {
           tabBarIcon: ({ size, focused }) => (
             <FontAwesome
               name="home"
-              color={focused ? "#a46cac" : "#c2c2c2"}
+              color={focused ? "#BC80FA" : "#c2c2c2"}
               size={size}
             />
           ),
           tabBarLabelStyle: {
-            color: "#a46cac",
+            color: "#BC80FA",
             fontSize: 14,
           },
         }}
@@ -37,12 +37,12 @@ export default function Layout() {
           tabBarIcon: ({ size, focused }) => (
             <FontAwesome
               name="file-text"
-              color={focused ? "#a46cac" : "#c2c2c2"}
+              color={focused ? "#BC80FA" : "#c2c2c2"}
               size={size}
             />
           ),
           tabBarLabelStyle: {
-            color: "#a46cac",
+            color: "#BC80FA",
             fontSize: 14,
           },
         }}
@@ -60,7 +60,7 @@ export default function Layout() {
             />
           ),
           tabBarLabelStyle: {
-            color: "#a46cac",
+            color: "#BC80FA",
             fontSize: 14,
           },
         }}

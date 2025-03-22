@@ -121,11 +121,11 @@ const styles = StyleSheet.create({
   textTitle: {
     fontSize: 30,
     fontWeight: "bold",
-    color: "#a46cac",
+    color: "#BC80FA",
   },
   textSubtitle: {
     fontSize: 20,
-    color: "#a46cac",
+    color: "#BC80FA",
   },
   inputEmail: {
     height: 40,
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     width: 300,
     padding: 10,
     borderRadius: 10,
-    backgroundColor: "#a46cac",
+    backgroundColor: "#BC80FA",
   },
   buttonText: {
     color: "#fff",

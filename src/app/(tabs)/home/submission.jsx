@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   cameraButton: {
-    backgroundColor: "#a46cac",
+    backgroundColor: "#BC80FA",
     padding: 10,
     borderRadius: 5,
   },
