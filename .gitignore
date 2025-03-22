@@ -32,7 +32,6 @@ yarn-error.*
 # local env files
 .env*.local
 .env
-firebaseConfig.js
 google-services.json
 
 # typescript
