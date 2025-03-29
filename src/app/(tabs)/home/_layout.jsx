@@ -1,12 +1,31 @@
 import { Tabs } from "expo-router"
 import { FontAwesome } from "@expo/vector-icons"
+import { TouchableOpacity } from "react-native"
+import { Feather } from "@expo/vector-icons"
+import { signOut } from "firebase/auth"
+import { auth } from "../../../../firebaseConfig"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useRouter } from "expo-router"
 
 export default function Layout() {
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    console.log("Logout")
+    try {
+      await signOut(auth)
+      await AsyncStorage.removeItem("user")
+      router.replace("/login") // redireciona para login
+    } catch (error) {
+      console.error("Erro ao sair:", error)
+    }
+  }
+
   return (
     <Tabs
       screenOptions={{
         headerStyle: {
-          backgroundColor: "#BC80FA",
+          backgroundColor: "#a46cac",
         },
         headerTintColor: "#fff",
         headerTitleAlign: "center",
@@ -19,13 +38,25 @@ export default function Layout() {
           tabBarIcon: ({ size, focused }) => (
             <FontAwesome
               name="home"
-              color={focused ? "#BC80FA" : "#c2c2c2"}
+              color={focused ? "#a46cac" : "#c2c2c2"}
               size={size}
             />
           ),
           tabBarLabelStyle: {
-            color: "#BC80FA",
+            color: "#a46cac",
             fontSize: 14,
+          },
+          headerRight: () => {
+            return (
+              <TouchableOpacity
+                onPress={async () => {
+                  handleLogout()
+                }}
+                style={{ marginRight: 16 }}
+              >
+                <Feather name="log-out" size={22} color="#fff" />
+              </TouchableOpacity>
+            )
           },
         }}
       />
@@ -37,12 +68,12 @@ export default function Layout() {
           tabBarIcon: ({ size, focused }) => (
             <FontAwesome
               name="file-text"
-              color={focused ? "#BC80FA" : "#c2c2c2"}
+              color={focused ? "#a46cac" : "#c2c2c2"}
               size={size}
             />
           ),
           tabBarLabelStyle: {
-            color: "#BC80FA",
+            color: "#a46cac",
             fontSize: 14,
           },
         }}
@@ -60,7 +91,7 @@ export default function Layout() {
             />
           ),
           tabBarLabelStyle: {
-            color: "#BC80FA",
+            color: "#a46cac",
             fontSize: 14,
           },
         }}

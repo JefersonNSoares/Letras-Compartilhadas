@@ -13,11 +13,14 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
 import { auth } from "../../firebaseConfig"
+import ModalAviso from "components/ModalAviso"
 
 export default function Login() {
   const [textEmail, setTextEmail] = useState("")
   const [textSenha, setTextSenha] = useState("")
   const [loading, setLoading] = useState(true) // Estado para verificar carregamento
+  const [modalVisivel, setModalVisivel] = useState(false)
+
   const router = useRouter()
 
   // Verifica se o usuário já está logado ao abrir a tela
@@ -67,6 +70,11 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
+      <ModalAviso
+        visible={modalVisivel}
+        onClose={() => setModalVisivel(false)}
+      />
+
       <Image
         source={require("@assets/icone-books.png")}
         style={{ width: 200, height: 200 }}
@@ -102,7 +110,7 @@ export default function Login() {
 
         <View style={styles.viewCriarConta}>
           <Text style={styles.textNaoConta}>Não tem uma conta?</Text>
-          <TouchableOpacity onPress={() => router.push("/register")}>
+          <TouchableOpacity onPress={() => setModalVisivel(true)}>
             <Text style={styles.buttonTextEsqueciSenha}>Criar uma conta</Text>
           </TouchableOpacity>
         </View>
@@ -121,11 +129,11 @@ const styles = StyleSheet.create({
   textTitle: {
     fontSize: 30,
     fontWeight: "bold",
-    color: "#BC80FA",
+    color: "#a46cac",
   },
   textSubtitle: {
     fontSize: 20,
-    color: "#BC80FA",
+    color: "#a46cac",
   },
   inputEmail: {
     height: 40,
@@ -141,7 +149,7 @@ const styles = StyleSheet.create({
     width: 300,
     padding: 10,
     borderRadius: 10,
-    backgroundColor: "#BC80FA",
+    backgroundColor: "#a46cac",
   },
   buttonText: {
     color: "#fff",

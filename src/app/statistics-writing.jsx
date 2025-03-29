@@ -85,7 +85,7 @@ const EstatisticasRedacao = () => {
         style={[styles.accordionHeader, { backgroundColor: bgColor }]}
         onPress={onPress}
       >
-        <MaterialIcons name={icon} size={20} color="#fff" style={styles.icon} />
+        <MaterialIcons name={icon} size={20} color="#111" style={styles.icon} />
         <Text style={styles.accordionTitle}>{title}</Text>
       </TouchableOpacity>
       {isOpen && (
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   accordionTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#111",
     marginLeft: 10,
   },
   accordionContent: {

@@ -8,6 +8,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native"
+import { Feather } from "@expo/vector-icons"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useRouter } from "expo-router"
 import { useFocusEffect } from "@react-navigation/native" // Importa o hook
@@ -97,6 +98,15 @@ export default function Home() {
 
   // Função atualizada para enviar a redação para correção
   const handleCorreccao = async (index) => {
+    const redacoesCorrigidas = redacoes.filter((r) => r.correction)
+    if (redacoesCorrigidas.length >= 5) {
+      Alert.alert(
+        "Limite atingido",
+        "Você só pode enviar até 5 redações para correção."
+      )
+      return
+    }
+
     setLoading(true)
     try {
       const redacaoDoAluno = redacoes[index].texto
@@ -120,7 +130,9 @@ export default function Home() {
     <View style={styles.item}>
       <Text style={styles.itemText}>
         Redação:{" "}
-        {item.texto.length > 50 ? item.texto.slice(0, 50) + "..." : item.texto}
+        {item.texto.length > 100
+          ? item.texto.slice(0, 100) + "..."
+          : item.texto}
       </Text>
       {item.correction ? (
         // Se já existe correção, mostra o botão para visualizar
@@ -128,7 +140,8 @@ export default function Home() {
           style={styles.button}
           onPress={() => verCorrecao(item.id)}
         >
-          <Text style={styles.buttonText}>Correção</Text>
+          <Feather name="check-circle" size={16} color="#fff" />
+          <Text style={styles.buttonText}>Acessar Correção</Text>
         </TouchableOpacity>
       ) : (
         // Se não, mostra os botões para editar e enviar para correção
@@ -181,7 +194,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#ececec",
+    backgroundColor: "#e4e4e4",
     flexDirection: "column",
     justifyContent: "flex-start",
   },
@@ -190,14 +203,22 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   item: {
-    padding: 15,
-    marginVertical: 8,
-    backgroundColor: "#a46caccf",
-    borderRadius: 8,
+    backgroundColor: "#fff8ec",
+    padding: 20,
+    borderRadius: 16,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    borderColor: "#f0e1d2",
+    borderWidth: 5,
   },
   itemText: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 18,
+    fontFamily: "Caveat_400Regular", // estilo manuscrito
+    color: "#333",
   },
   emptyText: {
     fontSize: 16,
@@ -207,18 +228,23 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10,
+    flexWrap: "wrap",
+    marginTop: 16,
+    gap: 8,
   },
   button: {
-    backgroundColor: "#007bff",
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 4,
-    marginRight: 5,
+    backgroundColor: "#6a4c93", // roxo moderno
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    marginTop: 8,
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
   },
   buttonText: {
     color: "#fff",
     fontSize: 14,
+    fontWeight: "bold",
   },
 })
