@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     color: "#a46cac",
   },
   inputEmail: {
-    height: 40,
+    height: 50,
     width: 300,
     margin: 12,
     borderColor: "gray",
@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#e4e4e4",
     borderRadius: 10,
+  
   },
   buttonLogin: {
     width: 300,

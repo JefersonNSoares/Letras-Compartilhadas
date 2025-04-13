@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react"
 import { View, TextInput, Button, Alert, StyleSheet, Text } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useLocalSearchParams } from "expo-router"
+
 
 export default function RedacaoScreen() {
   const [redacao, setRedacao] = useState("")
+  const { texto } = useLocalSearchParams()
 
   const salvarRedacao = async () => {
     if (redacao.trim() === "") {
@@ -38,6 +41,14 @@ export default function RedacaoScreen() {
   const contarLetras = (texto) => {
     return texto.replace(/\s+/g, "").length
   }
+
+  
+useEffect(() => {
+  if (texto) {
+    const decodedText = decodeURIComponent(texto)
+    setRedacao(decodedText)
+  }
+}, [texto])
 
   return (
     <View style={styles.container}>
