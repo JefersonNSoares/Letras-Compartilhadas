@@ -1,12 +1,13 @@
 {
   "expo": {
-    "name": "letrascompartilhadas",
+    "name": "Letras Compartilhadas",
     "slug": "letrascompartilhadas",
-    "version": "1.0.0",
+    "version": "1.1.0",
+    "android": {
+      "versionCode": 5
+    },
     "scheme": "letrascompartilhadas",
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": ["expo-router"],
     "extra": {
       "router": {
         "origin": false

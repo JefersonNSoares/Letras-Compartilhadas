@@ -1,7 +1,13 @@
 import { useState } from "react"
 import { useLocalSearchParams, useRouter } from "expo-router"
 import { Image } from "expo-image"
-import { View, StyleSheet, TouchableOpacity,ActivityIndicator, Text } from "react-native"
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+  Text,
+} from "react-native"
 import * as FileSystem from "expo-file-system"
 import { extractTextFromImage } from "../services/visionService"
 
@@ -41,24 +47,35 @@ export default function ImagePreviewScreen() {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: decodedUri }}
-        style={styles.image}
-        contentFit="contain"
-      />
+      {loading ? (
+        <View>
+          <Text style={{ color: "white" }}>
+            Aguarde enquanto transcrevemos imagem...
+          </Text>
+          <ActivityIndicator size="large" color="#a46cac" />
+        </View>
+      ) : (
+        <>
+          <Image
+            source={{ uri: decodedUri }}
+            style={styles.image}
+            contentFit="contain"
+          />
 
-      <View style={styles.wrapper}>
-        <TouchableOpacity style={styles.button} onPress={() => router.back()}>
-          <Text style={styles.buttonText}>Voltar</Text>
-        </TouchableOpacity>
+          <View style={styles.wrapper}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.back()}
+            >
+              <Text style={styles.buttonText}>Voltar</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={handleTranscribe}>
-          <Text style={styles.buttonText}>Transcrever Redação</Text>
-        </TouchableOpacity>
-      </View>
-
-
-      {loading && <ActivityIndicator size="large" color="#a46cac" />}
+            <TouchableOpacity style={styles.button} onPress={handleTranscribe}>
+              <Text style={styles.buttonText}>Transcrever Redação</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   )
 }
@@ -87,7 +104,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
   },
-  wrapper:{
+  wrapper: {
     position: "absolute",
     bottom: 40,
     flexDirection: "row",
@@ -95,8 +112,7 @@ const styles = StyleSheet.create({
     gap: 16, // ou use marginHorizontal se seu React Native ainda não suportar gap
     paddingHorizontal: 20,
     width: "100%",
-  }
-  ,
+  },
   button: {
     flex: 1,
     backgroundColor: "#a46cac",
